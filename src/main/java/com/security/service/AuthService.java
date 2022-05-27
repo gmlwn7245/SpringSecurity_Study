@@ -1,45 +1,49 @@
 package com.security.service;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.security.authmember.UserDetailsImpl;
 import com.security.domain.Member;
+import com.security.domain.MemberRole;
 import com.security.dto.LoginRequestDto;
 import com.security.dto.SignupRequestDto;
-import com.security.repository.MemberRepository;
-
-import lombok.AllArgsConstructor;
+import com.security.mapper.MemberMapper;
 
 
 @Service
-@Transactional
-@AllArgsConstructor
 public class AuthService {
-	private MemberRepository memberRepository;
-	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private MemberMapper memberMapper;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	@Autowired
 	private AuthenticationManager authManager;
 	
 	//회원가입 부분
 	public String signup(SignupRequestDto reqDto) {
-		boolean existMember = memberRepository.existsById(reqDto.getUserId());
+		System.out.println("========success========");
+		int existMember = memberMapper.existMemberById(reqDto.getUserId());
 		
 		//이미 존재하는 회원
-		if(existMember) return null;
+		if(existMember==1) return null;
 		
 		//존재하지 않은 회원
 		Member member = new Member(reqDto);
-		member.encryptPassword(passwordEncoder);
+		member.setPassword(passwordEncoder.encode(reqDto.getPassword()));
+		memberMapper.insertMember(member);
 		
+		MemberRole memberRole = new MemberRole(reqDto.getUserId());
+		memberMapper.insertMemberRole(memberRole);
 		
-		memberRepository.save(member);
 		return member.getUserId();
 	}
 	

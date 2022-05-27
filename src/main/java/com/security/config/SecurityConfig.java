@@ -25,7 +25,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeHttpRequests();
 
-		http.authorizeHttpRequests().antMatchers("/","/auth/**").permitAll() 
+		http.authorizeHttpRequests().antMatchers("/","/auth/**").permitAll()
 				.antMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().authenticated(); // 그 외 모든 요청은 인증 필요
 		

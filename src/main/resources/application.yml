@@ -2,5 +2,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: ''
-    url: 'jdbc:mysql://:3306/study_db?autoReconnect=true '
+    url: ''
     username: root
+    
+mybatis:
+  mapper-locations:
+  - mapper/*.xml
