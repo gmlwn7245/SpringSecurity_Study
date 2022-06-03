@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.security.domain.Member;
+import com.security.domain.MemberRole;
 import com.security.model.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -17,11 +18,12 @@ import lombok.AllArgsConstructor;
 public class UserDetailsImpl implements UserDetails {
 	//UserDetails : 사용자 정보를 담는 인터페이스
 	
+	private MemberRole memberRole;
 	private Member member;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		UserRole role = member.getRole();
+		UserRole role = memberRole.getRole();
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRoleType());
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(authority);
